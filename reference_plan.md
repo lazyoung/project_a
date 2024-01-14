@@ -32,10 +32,11 @@
 6. OpenHarmony
 
 # focus plan
-- Phase 1 Hi3861 + LiteOS_m + v6.0.0
-- Phase 2 OpenHarmony + c910
-- Phase 3 VirtIO + IOMMU + AIA
-- Phase 4 CUDA
+- Phase 1 qemu v8.2.0 rv32 + qemu_riscv_mini_system_demo
+- Phase 2 qemu_riscv_mini_system_demo + thead llvm + debug/logging
+- Phase 3 hispark_taurus_standard + rv64
+- Phase 4 VirtIO + IOMMU + AIA
+- Phase 5 CUDA
 
 ## OHOS setup
 - [archived source code](https://gitee.com/link?target=https%3A%2F%2Frepo.huaweicloud.com%2Fopenharmony%2Fos%2F4.1-Beta1%2Fcode-v4.1-Beta1.tar.gz)
@@ -43,11 +44,19 @@
 ```
 sudo docker pull swr.cn-south-1.myhuaweicloud.com/openharmony-docker/docker_oh_standard:3.2
 ```
+## Phase 1
 - build in docker
 ```
 cd OpenHarmony-v4.1-Beta1/OpenHarmony
 sudo docker run -it -v $(pwd):/home/openharmony swr.cn-south-1.myhuaweicloud.com/openharmony-docker/docker_oh_standard:3.2
-python3 -m pip install --user build/hb
 ./build.sh --product-name qemu_riscv_mini_system_demo
 ./build.sh --product-name hispark_pegasus_mini_system
 ```
+- qemu run
+```
+hb set; hb build
+cp out/ohos_config.json
+./qemu-run
+.qemu-system-riscv32 -M virt -m 128M -bios none -kernel out/riscv32_virt/qemu_riscv_mini_system_demo/OHOS_Image -global virtio-mmio.force-legacy=false -device virtio-gpu-device,xres=800,yres=480 -device virtio-tablet-device -vnc :20 -serial mon:stdio -drive if=pflash,file=vendor/ohemu/qemu_riscv32_mini_system_demo/fs-storage.img,format=raw,index=1 -append root="/dev/vda or console=ttyS0"
+```
+## Phase 2
