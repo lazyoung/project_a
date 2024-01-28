@@ -69,12 +69,11 @@ cp /home/openharmony/vendor/ohemu/qemu_riscv32_mini_system_demo
 -> replace */"qemu_riscv32_mini_system_demo" to */"{target_name}"
 ```
 - replace rv32 compiler
-```
-0. download toolchain from https://www.xrvm.cn/community/download?id=4267734522939904000
-1. /home/kkt/codes/lazyoung/prja/OpenHarmony-v4.1-Beta1/OpenHarmony/device/qemu/riscv32_virt/liteos_m/config.gni
-2. /home/kkt/codes/lazyoung/prja/OpenHarmony-v4.1-Beta1/OpenHarmony/kernel/liteos_m/BUILD.gn
-3. fix issues:
-    - gcc version match/ c std version match
-    - clib match: newlib/glibc/musl
-```
+0. download toolchain from https://www.xrvm.cn/community/download?id=4267734522939904000 (reference https://www.xrvm.cn/document?temp=bhr332&slug=xuantie-cpu-userguide)
+    1. /home/kkt/codes/lazyoung/prja/OpenHarmony-v4.1-Beta1/OpenHarmony/device/qemu/riscv32_virt/liteos_m/config.gni `board_toolchain_prefix = "board_arch = "rv32imafdcv_zihintpause_zfh_zba_zbb_zbc_zbs_xtheadc riscv64-unknown-elf-" "-mcpu=c908v-rv32",`
+    2. prja/OpenHarmony-v4.1-Beta1/OpenHarmony/kernel/liteos_m/kal/libc/newlib/porting/include/sys/_pthreadtypes.h `//typedef __uint32_t pthread_key_t;`
+    3. prja/OpenHarmony-v4.1-Beta1/OpenHarmony/kernel/liteos_m/kal/posix/src/pthread.c `int     pthread_setschedparam (pthread_t __pthread, int __policy,
+                               const struct sched_param *__param);`
+    4. prja/OpenHarmony-v4.1-Beta1/OpenHarmony/foundation/ability/ability_lite/services/abilitymgr_lite/src/slite/ability_mgr_service_slite.cpp
+    `extern "C" { void *__dso_handle = 0; }`
 - replace thead qemu
