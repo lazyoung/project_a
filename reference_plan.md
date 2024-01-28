@@ -34,7 +34,7 @@
 # focus plan
 - Phase 1 qemu v8.2.0 rv32 + qemu_riscv_mini_system_demo
 - Phase 2 qemu_riscv_mini_system_demo + thead llvm + debug/logging
-- Phase 3 hispark_taurus_standard + rv64
+- Phase 3 dayu800/visonFive2 + rv64
 - Phase 4 VirtIO + IOMMU + AIA
 - Phase 5 CUDA
 
@@ -60,3 +60,21 @@ cp out/ohos_config.json
 .qemu-system-riscv32 -M virt -m 128M -bios none -kernel out/riscv32_virt/qemu_riscv_mini_system_demo/OHOS_Image -global virtio-mmio.force-legacy=false -device virtio-gpu-device,xres=800,yres=480 -device virtio-tablet-device -vnc :20 -serial mon:stdio -drive if=pflash,file=vendor/ohemu/qemu_riscv32_mini_system_demo/fs-storage.img,format=raw,index=1 -append root="/dev/vda or console=ttyS0"
 ```
 ## Phase 2
+- prepare new hb set for build and qemu-run
+```
+vi /home/openharmony/qemu-run
+-> replace "ohos_config.json" to "out/ohos_config.json"
+
+cp /home/openharmony/vendor/ohemu/qemu_riscv32_mini_system_demo
+-> replace */"qemu_riscv32_mini_system_demo" to */"{target_name}"
+```
+- replace rv32 compiler
+```
+0. download toolchain from https://www.xrvm.cn/community/download?id=4267734522939904000
+1. /home/kkt/codes/lazyoung/prja/OpenHarmony-v4.1-Beta1/OpenHarmony/device/qemu/riscv32_virt/liteos_m/config.gni
+2. /home/kkt/codes/lazyoung/prja/OpenHarmony-v4.1-Beta1/OpenHarmony/kernel/liteos_m/BUILD.gn
+3. fix issues:
+    - gcc version match/ c std version match
+    - clib match: newlib/glibc/musl
+```
+- replace thead qemu
